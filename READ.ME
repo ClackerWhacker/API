@@ -1,0 +1,97 @@
+Internationilisation
+is the process of adapting the response based on the users location.
+Done by evaluating the user head and then examining a number of .properties with the language extension at the end.
+
+1. Create a Bean:
+
+	@Bean
+	public LocaleResolver localeResolver(){
+		AcceptHeaderLocaleResolver localeResolver = new AcceptHeaderLocaleResolver();
+		localeResolver.setDefaultLocale(Locale.US);
+		return localeResolver;
+	}
+
+And then use that bean in the controller by autowiring it and doing the following
+
+@Autowired
+private MessageSource messageSource;
+
+messageSource.getMessage("good.morning.message",
+                null, LocaleContextHolder.getLocale())
+
+
+======================================================
+
+Content Negotiation
+
+Resources can have multiple representations
+What if we want XML?
+To support XML add this xml
+		<dependency>
+			<groupId>com.fasterxml.jackson.dataformat</groupId>
+			<artifactId>jackson-dataformat-xml</artifactId>
+		</dependency>
+to the POM and then just specify in the header that you want xml returned and hey presto xml is then returned.
+
+======================================================
+
+Swagger
+
+What is the contract ? How do I know the response, request format etc?
+
+There is no standard. Swagger --> Popular documentation formats for RestFul Services
+
+Add this dependency:
+
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger2</artifactId>
+			<version>2.9.2</version>
+		</dependency>
+
+Also add springfox-swagger-ui:
+
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>2.9.2</version>
+        </dependency>
+
+Create a Config class and place beans in there annotate properly with
+@EnableSwagger2 and @Configuration
+
+    @Bean
+    public Docket getDocket(){
+        return new Docket(DocumentationType.SWAGGER_2);
+    }
+
+localhost:8080/v2/api-docs
+http://localhost:8080/swagger-ui.html
+
+info --> description and high level overview of the api
+host --> host / url
+paths --> all the resources that we are exposing
+
+How to edit the info etc?
+
+    private static final Contact DEFAULT_CONTACT = new Contact(
+            "Harrison", "github", "harrison.boyns@hotmail.com"
+    );
+
+
+    private static final ApiInfo DEFAULT_API_INFO = new ApiInfoBuilder()
+            .title("My Awesome API Built by Harrison")
+            .version("1")
+            .contact(DEFAULT_CONTACT)
+            .license("Talk to HArriason")
+            .build();
+
+   add this              .apiInfo(DEFAULT_API_INFO); to the Docket Bean and then do the above
+
+To add specific data / entity annottaions use the tag
+
+@ApiModelProperty(notes="Some Notes Here")
+
+======================================================
+
+Actuators
