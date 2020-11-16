@@ -1,14 +1,15 @@
 package com.example.udemyexample.controller;
 
 
-import com.example.udemyexample.Configs.Config;
+import com.example.udemyexample.database.Posts;
 import com.example.udemyexample.errorhandling.CustomUserException;
+import com.example.udemyexample.repository.RepositoryPosts;
 import com.example.udemyexample.repository.RepositoryUser;
-import com.example.udemyexample.userentities.User;
-import io.swagger.annotations.Api;
+import com.example.udemyexample.database.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.expression.spel.ast.OpAnd;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Collection;
+import java.util.Optional;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -25,6 +27,9 @@ public class UdemyController {
 
     @Autowired
     private RepositoryUser repositoryUser;
+
+    @Autowired
+    private RepositoryPosts repositoryPosts;
 
     @Autowired
     private MessageSource messageSource;
@@ -87,6 +92,18 @@ public class UdemyController {
         user.add(linkTo(methodOn(UdemyController.class).pongInternational()).withSelfRel());
 
         return user;
+    }
+
+    @GetMapping(path = "/posts/{id}")
+    public Collection<Posts> getPosts(@PathVariable Long id) throws CustomUserException {
+
+        Optional<User> user = repositoryUser.findById(id);
+        if(user.isEmpty()){
+            throw new CustomUserException("id-");
+        }
+
+
+        return user.get().getPosts();
     }
 
     // returns a user bean

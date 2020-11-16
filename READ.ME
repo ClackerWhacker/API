@@ -1,4 +1,5 @@
 Internationilisation
+
 is the process of adapting the response based on the users location.
 Done by evaluating the user head and then examining a number of .properties with the language extension at the end.
 
@@ -18,7 +19,6 @@ private MessageSource messageSource;
 
 messageSource.getMessage("good.morning.message",
                 null, LocaleContextHolder.getLocale())
-
 
 ======================================================
 
@@ -92,6 +92,67 @@ To add specific data / entity annottaions use the tag
 
 @ApiModelProperty(notes="Some Notes Here")
 
+============================ ==========================
+
+Side note @Bean annotation informs the spring container that this object is gonna be used by
+the spring container whereas at @Autowired tells the Container to deliver this instance of the class already registered
+to the container
+
 ======================================================
 
 Actuators
+
+To enable monitoring use Actuators
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+
+Add the above and below dependency:
+
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-rest-hal-browser</artifactId>
+		</dependency>
+
+This is Hypertext Application Language. Hal browser. Looks at api identifies the links
+and pops them onto the screen. The hal browser makes it easy to consume the hal services
+
+
+======================================================
+
+Static Filtering
+
+Filter the Response
+
+    @JsonIgnore
+
+Use this above the value to exclude a value
+
+    @JsonIgnoreProperties(value = {"filed11"})
+
+Or can use the above in the actual location above the class declaration, the value is the values to ignore from the json
+object return.
+
+Dynamic Filtering
+
+This filters on the fly.b
+
+
+
+
+======================================================
+
+
+Versioning
+
+
+
+======================================================
+
+
+
+Basic Authentication
+
+username + password
